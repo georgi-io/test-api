@@ -35,7 +35,7 @@ object TestAPI extends App :
   val config = ConfigFactory.load()
 
   logger.info("TestAPI is starting")
-  val bindingFuture = Http().newServerAt(config.getString("http.interface"), config.getInt("http.port")).bind(API().route)
+  Http().newServerAt(config.getString("http.interface"), config.getInt("http.port")).bind(API().route)
 
 
 
