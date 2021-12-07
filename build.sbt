@@ -18,6 +18,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-stream" % akkaV,
     "com.typesafe.akka" %% "akka-actor" % akkaV,
     "com.typesafe.akka" %% "akka-http" % akkaHttpV,
+    "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpV,
     "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV % "test"
   ).map(_.cross(CrossVersion.for3Use2_13))
 }
