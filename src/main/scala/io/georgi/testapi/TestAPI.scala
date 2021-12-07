@@ -21,21 +21,29 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val messageFormat: RootJsonFormat[Message] = jsonFormat1(Message.apply)
 }
 
-class API()(using system: ActorSystem, executor: ExecutionContext, logger: LoggingAdapter) extends JsonSupport:
-  val route: Route =
-    path("")(get(complete(Message("Test API Message"))))
+class API()(using system: ActorSystem, executor: ExecutionContext, logger: LoggingAdapter, config: Config) extends JsonSupport :
+  val route: Route = {
+    path("") {
+      get {
+        val message = Message(config.getString("api.message"))
+        complete(message)
+      }
+    }
+  }
 
 object TestAPI extends App :
+  val cfg = ConfigFactory.load()
+
   given system: ActorSystem = ActorSystem("test-api-system")
 
   given executor: ExecutionContext = system.dispatcher
 
   given logger: LoggingAdapter = Logging(system, "test-api")
 
-  val config = ConfigFactory.load()
+  given config: Config = cfg
 
   logger.info("TestAPI is starting")
-  Http().newServerAt(config.getString("http.interface"), config.getInt("http.port")).bind(API().route)
+  Http().newServerAt(cfg.getString("http.interface"), cfg.getInt("http.port")).bind(API().route)
 
 
 
