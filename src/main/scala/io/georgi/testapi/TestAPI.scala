@@ -15,29 +15,21 @@ import scala.io.StdIn
 
 case class Message(message: String)
 
-trait API:
-  implicit val system: ActorSystem
-
-  implicit def executor: ExecutionContext
-
-  def config: Config
-
-  val logger: LoggingAdapter
-
+class API()(using system: ActorSystem, executor: ExecutionContext, logger: LoggingAdapter):
   val route: Route =
     path("")(get(complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "Test API Result"))))
 
+object TestAPI extends App :
+  given system: ActorSystem = ActorSystem("test-api-system")
 
-object TestAPI extends App with API :
-  override implicit val system: ActorSystem = ActorSystem("test-api-system")
+  given executor: ExecutionContext = system.dispatcher
 
-  override implicit def executor: ExecutionContext = system.dispatcher
+  given logger: LoggingAdapter = Logging(system, "test-api")
 
-  override val logger = Logging(system, "test-api")
-  override val config = ConfigFactory.load()
+  val config = ConfigFactory.load()
 
   logger.info("TestAPI is starting")
-  val bindingFuture = Http().newServerAt(config.getString("http.interface"), config.getInt("http.port")).bind(route)
+  val bindingFuture = Http().newServerAt(config.getString("http.interface"), config.getInt("http.port")).bind(API().route)
 
 
 
