@@ -11,7 +11,11 @@ lazy val commonSettings = Seq(
 
 lazy val dockerSettings = Seq(
   dockerBaseImage := "openjdk:jre-alpine",
-  dockerRepository := Some("927485958639.dkr.ecr.eu-central-1.amazonaws.com/test-api-registry-e614218")
+  dockerRepository := Some("927485958639.dkr.ecr.eu-central-1.amazonaws.com"),
+  dockerUpdateLatest := true,
+  versionScheme := Some("early-semver"),
+  dockerExposedPorts := Seq(9000),
+  packageName := "test-api-dea2bfe"
 )
 
 lazy val root = (project in file("."))
