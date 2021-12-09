@@ -1,5 +1,5 @@
 {
-    "name": "georgi.io-infrastructure",
+    "name": "test-api",
     "devDependencies": {
         "@types/node": "^14"
     },
