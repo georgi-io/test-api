@@ -6,7 +6,8 @@ lazy val commonSettings = Seq(
   organization := "io.georgi",
   version := "0.0.1-SNAPSHOT",
   scalaVersion := "3.1.0",
-  scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
+  scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
+
 )
 
 lazy val dockerSettings = Seq(
