@@ -15,12 +15,8 @@ You need to a few things installed
 You need to log into your AWS account via the CLI and obtain access keys/credentials in your local environment. 
 Easy to do with e.g `export AWS_PROFILE=something && aws sso login --profile=something` and `yawsso -p something`.
 
-Create the infrastructure with `pulumi up` and take note of the exported values, especially the ECR url.
-You will need to modify two things in `build.sbt`:
-* `dockerRepository := Some("927485958639.dkr.ecr.eu-central-1.amazonaws.com")`
-* `packageName := "test-api-dea2bfe"`
-
-which in fact is the ECR repository url split at '/'
+Create the infrastructure with `pulumi -C infrastructure up` and issue `./stack-to-env.sh` to make stack information
+available to SBT via .env-file
 
 Do a Docker login to the ECR via `infrastructure/docker-login.sh`
 
