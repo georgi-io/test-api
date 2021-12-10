@@ -1,0 +1,33 @@
+name: SBT CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      REPO_URL: registry.sgeorgi.io
+      REPO_IMAGE: test-api
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: sbt test
+        with:
+          fail_ci_if_error: true
+  containerize:
+    runs-on: ubuntu-latest
+    env:
+      REPO_URL: registry.sgeorgi.io
+      REPO_IMAGE: test-api
+    steps:
+      - uses: actions/checkout@v2
+        name: Build docker image
+        run: sbt docker:stage
+        with:
+          fail_ci_if_error: true
