@@ -9,7 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      REPO_URL: registry.sgeorgi.io
+      REPO_URL: registry.georgi.io
       REPO_IMAGE: test-api
     steps:
       - name: Checkout
