@@ -20,7 +20,7 @@ jobs:
       - name: Build and Test
         run: sbt -v +test
 
-  package:
+  deploy:
     runs-on: ubuntu-latest
     env:
       REPO_URL: 927485958639.dkr.ecr.eu-central-1.amazonaws.com
