@@ -9,26 +9,27 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    env:
-      REPO_URL: registry.georgi.io
-      REPO_IMAGE: test-api
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: adopt
-          java-version: 16
-      - name: Build and Test
-        run: sbt -v +test
+#  test:
+#    runs-on: ubuntu-latest
+#    env:
+#      REPO_URL: registry.georgi.io
+#      REPO_IMAGE: test-api
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#      - name: Setup JDK
+#        uses: actions/setup-java@v2
+#        with:
+#          distribution: adopt
+#          java-version: 16
+#      - name: Build and Test
+#        run: sbt -v +test
   deploy:
     runs-on: ubuntu-latest
     env:
       REPO_URL: 927485958639.dkr.ecr.eu-central-1.amazonaws.com
       REPO_IMAGE: test-api-6dce598
+      AWS_ROLE: arn:aws:iam::927485958639:role/deploy-role-c06415f
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -40,7 +41,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
-          role-to-assume: arn:aws:iam::927485958639:role/deploy-role-413fc48
+          role-to-assume: $AWS_ROLE
           role-session-name: deploy-role-session
           aws-region: eu-central-1
       - name: Login to Amazon ECR
