@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - 'releases/**'
-      -
 permissions:
   id-token: write
   contents: read
