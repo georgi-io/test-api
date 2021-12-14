@@ -29,7 +29,6 @@ jobs:
     env:
       REPO_URL: 927485958639.dkr.ecr.eu-central-1.amazonaws.com
       REPO_IMAGE: test-api-6dce598
-      AWS_ROLE: arn:aws:iam::927485958639:role/deploy-role-c06415f
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -41,7 +40,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
-          role-to-assume: ${AWS_ROLE}
+          role-to-assume: arn:aws:iam::927485958639:role/deploy-role-c06415f
           role-session-name: deploy-role-session
           aws-region: eu-central-1
       - name: Login to Amazon ECR
