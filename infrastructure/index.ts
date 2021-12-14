@@ -48,12 +48,18 @@ const deployRole = new aws.iam.Role("deploy-role", {
   assumeRolePolicy: JSON.stringify({
     Version: "2012-10-17",
     Statement: [{
-      Action: "sts:AssumeRole",
+      Action: "sts:AssumeRoleWithWebIdentity",
       Principal: {
-        Service: "ecs.amazonaws.com"
+        Service: "ecs.amazonaws.com",
+        Federated: "token.actions.githubusercontent.com"
       },
       Effect: "Allow",
-      Sid: ""
+      Sid: "",
+      Condition: {
+        StringEquals: {
+          "token.actions.githubusercontent.com:sub": "repo:georgi-io/test-api:ref:refs/heads/releases"
+        }
+      }
     }]
   })
 });
@@ -73,12 +79,7 @@ const deployRolePolicy = new aws.iam.RolePolicy("deploy-role-policy", {
         "ecr:UploadLayerPart"
       ],
       Effect: "Allow",
-      Resource: "*",
-      Condition: {
-        StringEquals: {
-          "token.actions.githubusercontent.com:sub": "repo:georgi-io/test-api:ref:refs/heads/releases"
-        }
-      }
+      Resource: "*"
     }]
   })
 });
