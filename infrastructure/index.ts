@@ -24,26 +24,6 @@ const image = repositoryUrl.apply(r => r + ":" + deployVersion);
 //
 // export const url = lb.endpoint.hostname;
 
-// const deployUserPolicy = new aws.iam.UserPolicy("test-api-deployment-user-policy", {
-//   user: deployUser.name,
-//   policy: {
-//     Version: "2012-10-17",
-//     Statement: [{
-//       Action: [
-//         "ecr:BatchGetImage",
-//         "ecr:BatchCheckLayerAvailability",
-//         "ecr:CompleteLayerUpload",
-//         "ecr:GetDownloadUrlForLayer",
-//         "ecr:InitiateLayerUpload",
-//         "ecr:PutImage",
-//         "ecr:UploadLayerPart"
-//       ],
-//       Effect: "Allow",
-//       Resource: "*"
-//     }]
-//   },
-// });
-
 const identityProvider = new aws.iam.OpenIdConnectProvider("github-oicd", {
   clientIdLists: ["sts.amazonaws.com"],
   thumbprintLists: ["a031c46782e6e6c662c2c87c76da9aa62ccabd8e"],
