@@ -76,7 +76,8 @@ new aws.iam.RolePolicy("deploy-role-policy", {
         "ecr:GetDownloadUrlForLayer",
         "ecr:InitiateLayerUpload",
         "ecr:PutImage",
-        "ecr:UploadLayerPart"
+        "ecr:UploadLayerPart",
+        "ecr:GetAuthorizationToken"
       ],
       Effect: "Allow",
       Resource: "*"

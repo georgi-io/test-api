@@ -2,8 +2,8 @@ name: SBT CI
 
 on:
   push:
-    branches:
-      - 'releases/**'
+#    branches:
+#      - 'releases/**'
 permissions:
   id-token: write
   contents: read
