@@ -46,26 +46,25 @@ const image = repositoryUrl.apply(r => r + ":" + deployVersion);
 
 const identityProvider = new aws.iam.OpenIdConnectProvider("github-oicd", {
   clientIdLists: ["sts.amazonaws.com"],
-  thumbprintLists: [],
+  thumbprintLists: ["a031c46782e6e6c662c2c87c76da9aa62ccabd8e"],
   url: "https://token.actions.githubusercontent.com",
 })
 
 
-const deployGitHubAllowPolicy = new aws.iam.RolePolicy("deploy-github-allow-policy", {
-  role: deployRole.id,
-  policy: JSON.stringify({
+const deployRole = new aws.iam.Role("deploy-role", {
+  assumeRolePolicy:  identityProvider.arn.apply((providerArn) => JSON.stringify({
     Version: "2012-10-17",
     Statement: [{
       Sid: "RoleForGithub",
-      Effect: "Allow",
-      Principal: {Federated: identityProvider.arn},
       Action: "sts:AssumeRoleWithWebIdentity",
-      Condition: { StringEquals: {"token.actions.githubusercontent.com:sub": "repo:georgi-io/test-api:*" }}
+      Effect: "Allow",
+      Principal: { Federated: providerArn },
+      Condition: { StringLike: { "token.actions.githubusercontent.com:sub": `repo:georgi-io/test-api:*` } }
     }]
-  })
-});
+  }))
+})
 
-const deployRolePolicy = new aws.iam.RolePolicy("deploy-role-policy", {
+new aws.iam.RolePolicy("deploy-role-policy", {
   role: deployRole.id,
   policy: JSON.stringify({
     Version: "2012-10-17",
@@ -84,14 +83,5 @@ const deployRolePolicy = new aws.iam.RolePolicy("deploy-role-policy", {
     }]
   })
 });
-
-const deployRole = new aws.iam.Role("deploy-role", {
-  assumeRolePolicy: data.aws_iam_policy_document.instance_assume_role_policy.json,
-  managedPolicyArns: [
-    deployGitHubAllowPolicy.arn,
-    deployRolePolicy.arn,
-  ],
-
-})
 
 export const deployRoleARN = deployRole.arn
