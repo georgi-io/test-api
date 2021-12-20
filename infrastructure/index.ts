@@ -4,12 +4,21 @@ import * as awsx from "@pulumi/awsx";
 
 const deployVersion = "0.0.1-SNAPSHOT"
 
-const repo = new awsx.ecr.Repository("test-api");
+const repo = new awsx.ecr.Repository("test-api", {
+  lifeCyclePolicyArgs: {
+    rules: [{
+      selection: "any",
+      maximumNumberOfImages: 3,
+    }]
+  }
+});
 export const repositoryUrl = repo.repository.repositoryUrl;
-const image = repositoryUrl.apply(r => r + ":" + deployVersion);
 
+
+// const image = repositoryUrl.apply(r => r + ":" + deployVersion);
+//
 // const lb = new awsx.lb.ApplicationListener("test-api-listener", { port: 9000, protocol: "HTTP" });
-// const nginx = new awsx.ecs.FargateService("test-api-service", {
+// const testApiService = new awsx.ecs.FargateService("test-api-service", {
 //   taskDefinitionArgs: {
 //     containers: {
 //       testapi: {
@@ -29,7 +38,6 @@ const identityProvider = new aws.iam.OpenIdConnectProvider("github-oicd", {
   thumbprintLists: ["a031c46782e6e6c662c2c87c76da9aa62ccabd8e"],
   url: "https://token.actions.githubusercontent.com",
 })
-
 
 const deployRole = new aws.iam.Role("deploy-role", {
   assumeRolePolicy:  identityProvider.arn.apply((providerArn) => JSON.stringify({
