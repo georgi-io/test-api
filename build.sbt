@@ -6,6 +6,7 @@ lazy val commonSettings = Seq(
   organization := "io.georgi",
   version := "0.0.1-SNAPSHOT",
   scalaVersion := "3.1.0",
+  turbo := true,
   scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
 
 )
@@ -14,7 +15,6 @@ lazy val dockerSettings = Seq(
   dockerBaseImage := "openjdk:jre-alpine",
   dockerRepository := Some("927485958639.dkr.ecr.eu-central-1.amazonaws.com"),
   dockerUpdateLatest := true,
-//  versionScheme := Some("early-semver"),
   dockerExposedPorts := Seq(9000),
   packageName := "test-api-356b409"
 )
