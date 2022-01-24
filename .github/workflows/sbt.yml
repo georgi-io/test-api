@@ -9,21 +9,21 @@ permissions:
   contents: read
 
 jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#    env:
-#      REPO_URL: registry.georgi.io
-#      REPO_IMAGE: test-api
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#      - name: Setup JDK
-#        uses: actions/setup-java@v2
-#        with:
-#          distribution: adopt
-#          java-version: 16
-#      - name: Build and Test
-#        run: sbt -v +test
+  test:
+    runs-on: ubuntu-latest
+    env:
+      REPO_URL: registry.georgi.io
+      REPO_IMAGE: test-api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 16
+      - name: Build and Test
+        run: sbt -v +test
   deploy:
     runs-on: ubuntu-latest
     env:
