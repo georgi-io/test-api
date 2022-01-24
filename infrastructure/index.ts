@@ -16,33 +16,34 @@ export const repositoryUrl = repo.repository.repositoryUrl;
 
 const image = repositoryUrl.apply(r => r + ':' + deployVersion);
 
-const cluster = new awsx.ecs.Cluster('test-api-cluster');
-const alb = new awsx.elasticloadbalancingv2.ApplicationLoadBalancer(
-  'test-api--lb', {external: true, securityGroups: cluster.securityGroups});
-const atg = alb.createTargetGroup(
-  'test-api--tg', {port: 9000, protocol: 'HTTP', deregistrationDelay: 0});
-const web = atg.createListener('web', {port: 80});
-
-const appService = new awsx.ecs.FargateService('test-api--svc', {
-  cluster,
-  taskDefinitionArgs: {
-    containers: {
-      testapi: {
-        image: image,
-        memory: 128,
-        portMappings: [web],
-      },
-    }
-  },
-  desiredCount: 2,
-});
-``
-
-export const url = web.endpoint.hostname;
+// const cluster = new awsx.ecs.Cluster('test-api-cluster');
+// const alb = new awsx.elasticloadbalancingv2.ApplicationLoadBalancer(
+//   'test-api--lb', {external: true, securityGroups: cluster.securityGroups});
+// const atg = alb.createTargetGroup(
+//   'test-api--tg', {port: 9000, protocol: 'HTTP', deregistrationDelay: 0});
+// const web = atg.createListener('web', {port: 80});
+//
+// const appService = new awsx.ecs.FargateService('test-api--svc', {
+//   cluster,
+//   taskDefinitionArgs: {
+//     containers: {
+//       testapi: {
+//         image: image,
+//         memory: 128,
+//         portMappings: [web],
+//       },
+//     }
+//   },
+//   desiredCount: 2,
+// });
+// ``
+//
+// export const url = web.endpoint.hostname;
 
 const identityProvider = new aws.iam.OpenIdConnectProvider('github-oicd', {
   clientIdLists: ['sts.amazonaws.com'],
-  thumbprintLists: ['a031c46782e6e6c662c2c87c76da9aa62ccabd8e'],
+  // thumbprintLists: ['a031c46782e6e6c662c2c87c76da9aa62ccabd8e'],
+  thumbprintLists: ['6938FD4D98BAB03FAADB97B34396831E3780AEA1'],
   url: 'https://token.actions.githubusercontent.com',
 })
 
