@@ -46,8 +46,6 @@ const dns_cname = new aws.route53.Record("dns_cname", {
   records: [web.endpoint.hostname]
 });
 
-export const url = web.endpoint.hostname;
-
 const identityProvider = new aws.iam.OpenIdConnectProvider('github-oicd', {
   clientIdLists: ['sts.amazonaws.com'],
   thumbprintLists: ['6938FD4D98BAB03FAADB97B34396831E3780AEA1'],
