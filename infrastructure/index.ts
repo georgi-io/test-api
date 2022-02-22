@@ -1,8 +1,9 @@
 import * as aws from '@pulumi/aws';
 import * as awsx from '@pulumi/awsx';
+import * as acmCert from 'pulumi-acm-dns-validated-cert';
 
-const dnsZone = 'Z03824391ACAV1RM34QPB'
-const deployVersion = '0.0.1-SNAPSHOT'
+const DNS_ZONE_ID = 'Z03824391ACAV1RM34QPB'
+const DEPLOY_VERSION = '0.0.1-SNAPSHOT'
 
 const repo = new awsx.ecr.Repository('test-api', {
   lifeCyclePolicyArgs: {
@@ -13,37 +14,11 @@ const repo = new awsx.ecr.Repository('test-api', {
   }
 });
 export const repositoryUrl = repo.repository.repositoryUrl;
+const image = repositoryUrl.apply(r => r + ':' + DEPLOY_VERSION);
 
-
-const image = repositoryUrl.apply(r => r + ':' + deployVersion);
-
-const cluster = new awsx.ecs.Cluster('test-api-cluster');
-const alb = new awsx.elasticloadbalancingv2.ApplicationLoadBalancer(
-  'test-api--lb', {external: true, securityGroups: cluster.securityGroups});
-const atg = alb.createTargetGroup(
-  'test-api--tg', {port: 9000, protocol: 'HTTP', deregistrationDelay: 0});
-const web = atg.createListener('web', {port: 80});
-
-const appService = new awsx.ecs.FargateService('test-api--svc', {
-  cluster,
-  taskDefinitionArgs: {
-    containers: {
-      testapi: {
-        image: image,
-        memory: 128,
-        portMappings: [web],
-      },
-    }
-  },
-  desiredCount: 2,
-});
-
-const dns_cname = new aws.route53.Record("dns_cname", {
-  zoneId: dnsZone,
-  name: "test-api.dev.georgi.io",
-  type: "CNAME",
-  ttl: 300,
-  records: [web.endpoint.hostname]
+const certificate = new acmCert.ACMCert('certificate', {
+  subject: 'test-api.dev.georgi.io',
+  zoneId: DNS_ZONE_ID
 });
 
 const identityProvider = new aws.iam.OpenIdConnectProvider('github-oicd', {
@@ -86,4 +61,31 @@ new aws.iam.RolePolicy('deploy-role-policy', {
   })
 });
 
-export const deployRoleARN = deployRole.arn
+const cluster = new awsx.ecs.Cluster('test-api-cluster');
+const alb = new awsx.elasticloadbalancingv2.ApplicationLoadBalancer(
+  'test-api--lb', {external: true, securityGroups: cluster.securityGroups});
+const atg = alb.createTargetGroup(
+  'test-api--tg', {port: 9000, protocol: 'HTTP', deregistrationDelay: 0});
+const web = atg.createListener('web', {port: 443, certificateArn: certificate.certificateArn});
+
+const appService = new awsx.ecs.FargateService('test-api--svc', {
+  cluster,
+  taskDefinitionArgs: {
+    containers: {
+      testapi: {
+        image: image,
+        memory: 128,
+        portMappings: [web],
+      },
+    }
+  },
+  desiredCount: 2,
+});
+
+const dnsName = new aws.route53.Record("dns_cname", {
+  zoneId: DNS_ZONE_ID,
+  name: "test-api.dev.georgi.io",
+  type: "CNAME",
+  ttl: 300,
+  records: [web.endpoint.hostname]
+});
