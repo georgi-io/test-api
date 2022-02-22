@@ -15,8 +15,9 @@ const repo = new awsx.ecr.Repository('test-api', {
     }]
   }
 });
+
+//  Needs to be incorporated into build.sbt
 export const repositoryUrl = repo.repository.repositoryUrl;
-const image = repositoryUrl.apply(r => r + ':' + DEPLOY_VERSION);
 
 const certificate = new acmCert.ACMCert('certificate', {
   subject: 'test-api.dev.georgi.io',
@@ -35,6 +36,9 @@ const deployRole = new aws.iam.Role('deploy-role', {
     }]
   })
 })
+
+// Needs to be included into GitHub Actions
+export const deployRoleARN = deployRole.arn
 
 new aws.iam.RolePolicy('deploy-role-policy', {
   role: deployRole.id,
@@ -64,6 +68,7 @@ const atg = alb.createTargetGroup(
   'test-api--tg', {port: 9000, protocol: 'HTTP', deregistrationDelay: 0});
 const web = atg.createListener('web', {port: 443, certificateArn: certificate.certificateArn});
 
+const image = repositoryUrl.apply(r => r + ':' + DEPLOY_VERSION);
 const appService = new awsx.ecs.FargateService('test-api--svc', {
   cluster,
   taskDefinitionArgs: {
