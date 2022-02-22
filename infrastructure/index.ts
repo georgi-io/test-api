@@ -1,6 +1,7 @@
 import * as aws from '@pulumi/aws';
 import * as awsx from '@pulumi/awsx';
 
+const dnsZone = 'Z03824391ACAV1RM34QPB'
 const deployVersion = '0.0.1-SNAPSHOT'
 
 const repo = new awsx.ecr.Repository('test-api', {
@@ -37,22 +38,13 @@ const appService = new awsx.ecs.FargateService('test-api--svc', {
   desiredCount: 2,
 });
 
-const dns_zone = new aws.route53.Zone("dns_zone", {
-  comment: "",
-  forceDestroy: false,
-  name: "dev.georgi.io",
-}, {
-  protect: true,
-});
-
 const dns_cname = new aws.route53.Record("dns_cname", {
-  zoneId: dns_zone.zoneId,
+  zoneId: dnsZone,
   name: "test-api.dev.georgi.io",
   type: "CNAME",
   ttl: 300,
   records: [web.endpoint.hostname]
 });
-
 
 export const url = web.endpoint.hostname;
 
