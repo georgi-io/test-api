@@ -4,6 +4,7 @@ import * as acmCert from 'pulumi-acm-dns-validated-cert';
 
 // See infrastructure stack!!
 const DNS_ZONE_ID = 'Z03824391ACAV1RM34QPB'
+const IDENTITY_PROVIDER_ARN = 'arn:aws:iam::927485958639:oidc-provider/token.actions.githubusercontent.com'
 const DEPLOY_VERSION = '0.0.1-SNAPSHOT'
 
 const repo = new awsx.ecr.Repository('test-api', {
@@ -22,23 +23,17 @@ const certificate = new acmCert.ACMCert('certificate', {
   zoneId: DNS_ZONE_ID
 });
 
-const identityProvider = new aws.iam.OpenIdConnectProvider('github-oicd', {
-  clientIdLists: ['sts.amazonaws.com'],
-  thumbprintLists: ['6938fd4d98bab03faadb97b34396831e3780aea1'],
-  url: 'https://token.actions.githubusercontent.com',
-})
-
 const deployRole = new aws.iam.Role('deploy-role', {
-  assumeRolePolicy: identityProvider.arn.apply((providerArn) => JSON.stringify({
+  assumeRolePolicy: JSON.stringify({
     Version: '2012-10-17',
     Statement: [{
       Sid: 'RoleForGithub',
       Action: 'sts:AssumeRoleWithWebIdentity',
       Effect: 'Allow',
-      Principal: {Federated: providerArn},
+      Principal: {Federated: IDENTITY_PROVIDER_ARN},
       Condition: {StringLike: {'token.actions.githubusercontent.com:sub': `repo:georgi-io/test-api:*`}}
     }]
-  }))
+  })
 })
 
 new aws.iam.RolePolicy('deploy-role-policy', {
