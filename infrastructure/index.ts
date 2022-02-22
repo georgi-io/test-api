@@ -36,7 +36,23 @@ const appService = new awsx.ecs.FargateService('test-api--svc', {
   },
   desiredCount: 2,
 });
-``
+
+const dns_zone = new aws.route53.Zone("dns_zone", {
+  comment: "",
+  forceDestroy: false,
+  name: "dev.georgi.io",
+}, {
+  protect: true,
+});
+
+const dns_cname = new aws.route53.Record("dns_cname", {
+  zoneId: dns_zone.zoneId,
+  name: "test-api.dev.georgi.io",
+  type: "CNAME",
+  ttl: 300,
+  records: [web.endpoint.hostname]
+});
+
 
 export const url = web.endpoint.hostname;
 
