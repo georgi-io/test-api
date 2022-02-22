@@ -2,6 +2,7 @@ import * as aws from '@pulumi/aws';
 import * as awsx from '@pulumi/awsx';
 import * as acmCert from 'pulumi-acm-dns-validated-cert';
 
+// See infrastructure stack!!
 const DNS_ZONE_ID = 'Z03824391ACAV1RM34QPB'
 const DEPLOY_VERSION = '0.0.1-SNAPSHOT'
 
@@ -23,7 +24,7 @@ const certificate = new acmCert.ACMCert('certificate', {
 
 const identityProvider = new aws.iam.OpenIdConnectProvider('github-oicd', {
   clientIdLists: ['sts.amazonaws.com'],
-  thumbprintLists: ['6938FD4D98BAB03FAADB97B34396831E3780AEA1'],
+  thumbprintLists: ['6938fd4d98bab03faadb97b34396831e3780aea1'],
   url: 'https://token.actions.githubusercontent.com',
 })
 
