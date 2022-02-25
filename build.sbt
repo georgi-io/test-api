@@ -4,7 +4,7 @@ enablePlugins(AshScriptPlugin)
 
 lazy val commonSettings = Seq(
   organization := "io.georgi",
-  version := "0.0.2-SNAPSHOT",
+  version := "0.0.3-SNAPSHOT",
   scalaVersion := "3.1.0",
   turbo := true,
   scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
@@ -16,7 +16,7 @@ lazy val dockerSettings = Seq(
   dockerRepository := Some("927485958639.dkr.ecr.eu-central-1.amazonaws.com"),
   dockerUpdateLatest := true,
   dockerExposedPorts := Seq(9000),
-  packageName := "test-api-679c6d7"
+  packageName := "test-api-178e95b"
 )
 
 lazy val root = (project in file("."))
