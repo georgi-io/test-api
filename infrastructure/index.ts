@@ -4,7 +4,7 @@ import * as awsx from '@pulumi/awsx';
 // See infrastructure stack!!
 export const DNS_ZONE_ID = 'Z03824391ACAV1RM34QPB';
 export const IDENTITY_PROVIDER_ARN = 'arn:aws:iam::927485958639:oidc-provider/token.actions.githubusercontent.com';
-export const DEPLOY_VERSION = '0.0.4-SNAPSHOT';
+export const DEPLOY_VERSION = '0.0.5-SNAPSHOT';
 export const CLUSTER_NAME = 'georgi-cluster-11dd4e2';
 export const ALB_ARN = 'arn:aws:elasticloadbalancing:eu-central-1:927485958639:loadbalancer/app/georgi-alb-d3639d0/c03e1d5b789380fc'
 export const ALB_LISTENER_HTTPS = 'arn:aws:elasticloadbalancing:eu-central-1:927485958639:listener/app/georgi-alb-d3639d0/c03e1d5b789380fc/b7ee40a673cb48c2'
@@ -114,7 +114,7 @@ albListenerHTTPS.then(listener => {
     conditions: [
       {
         pathPattern: {
-          values: ["/service1/"]
+          values: ["/"]
         },
       },
       {
@@ -133,47 +133,3 @@ let dnsName = new aws.route53.Record('dns_cname', {
   ttl: 300,
   records: [alb.loadBalancer.dnsName]
 });
-
-// let targetGroup2 = alb.createTargetGroup(
-//   'test-api2--tg', {vpc: vpc, loadBalancer: alb, port: 9000, protocol: 'HTTP', deregistrationDelay: 0});
-// let appService2 = new awsx.ecs.FargateService('test-api--svc', {
-//   cluster,
-//   taskDefinitionArgs: {
-//     containers: {
-//       testapi2: {
-//         image: REPOSITORY_URL.apply(r => r + ':' + DEPLOY_VERSION),
-//         memory: 128,
-//         portMappings: [targetGroup],
-//         environment: [
-//           { name: 'API_MESSAGE', value: "Test from Service 2" }
-//         ]
-//       },
-//     }
-//   },
-//   desiredCount: 1,
-// });
-// let albListenerHTTPS2 = aws.lb.getListener({arn: ALB_LISTENER_HTTPS})
-// albListenerHTTPS2.then(listener => {
-//   let rule = new aws.lb.ListenerRule("test-api-2", {
-//     listenerArn: listener.arn,
-//     priority: 99,
-//     actions: [{
-//       type: "forward",
-//       targetGroupArn: targetGroup.targetGroup.arn,
-//     }],
-//     conditions: [
-//       {
-//         pathPattern: {
-//           values: ["/service2"]
-//         },
-//       },
-//       {
-//         hostHeader: {
-//           values: ["test-api.dev.georgi.io"],
-//         },
-//       },
-//     ],
-//   });
-// })
-
-
