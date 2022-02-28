@@ -23,7 +23,7 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
 
 class API()(using system: ActorSystem, executor: ExecutionContext, logger: LoggingAdapter, config: Config) extends JsonSupport :
   val route: Route = {
-    path("") {
+    path("/") {
       get {
         val message = Message(config.getString("api.message"))
         complete(message)
