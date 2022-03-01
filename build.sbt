@@ -4,7 +4,7 @@ enablePlugins(AshScriptPlugin)
 
 lazy val commonSettings = Seq(
   organization := "io.georgi",
-  version := "v1.0.0",
+  version := "v1.0.1",
   scalaVersion := "3.1.0",
   turbo := true,
   scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
@@ -24,7 +24,7 @@ lazy val root = (project in file("."))
   .settings(commonSettings: _*)
   .settings(
     name := "Test API",
-    Compile / mainClass := Some("io.georgi.testapi.TestAPI"),
+    Compile / mainClass := Some("io.georgi.dev.testapi.TestAPI"),
     libraryDependencies ++= rootDependencies,
     dockerSettings
   )

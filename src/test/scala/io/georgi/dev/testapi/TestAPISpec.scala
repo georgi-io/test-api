@@ -1,4 +1,4 @@
-package io.georgi.testapi
+package io.georgi.dev.testapi
 
 import org.scalatest.funsuite.AnyFunSuite
 
