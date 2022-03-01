@@ -16,7 +16,8 @@ lazy val dockerSettings = Seq(
   dockerRepository := Some("927485958639.dkr.ecr.eu-central-1.amazonaws.com"),
   dockerUpdateLatest := true,
   dockerExposedPorts := Seq(9000),
-  packageName := "test-api-49fb200"
+//  THIS HAS TO BE SET
+  packageName := "test-api-f8c7b69"
 )
 
 lazy val root = (project in file("."))

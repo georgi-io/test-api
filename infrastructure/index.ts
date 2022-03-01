@@ -3,7 +3,7 @@ import * as aws from '@pulumi/aws';
 export const IDENTITY_PROVIDER_ARN = 'arn:aws:iam::927485958639:oidc-provider/token.actions.githubusercontent.com';
 
 // Needs to be put into build.sbt
-export const REPOSITORY_URL = "927485958639.dkr.ecr.eu-central-1.amazonaws.com/test-api-49fb200";
+export const REPOSITORY_URL = "927485958639.dkr.ecr.eu-central-1.amazonaws.com/test-api-f8c7b69";
 
 let deployRole = new aws.iam.Role('deploy-role', {
   assumeRolePolicy: JSON.stringify({
