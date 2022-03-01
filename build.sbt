@@ -4,7 +4,7 @@ enablePlugins(AshScriptPlugin)
 
 lazy val commonSettings = Seq(
   organization := "io.georgi",
-  version := "0.0.7-SNAPSHOT",
+  version := "v1.0.0",
   scalaVersion := "3.1.0",
   turbo := true,
   scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
