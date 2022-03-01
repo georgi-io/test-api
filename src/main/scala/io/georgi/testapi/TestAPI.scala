@@ -28,14 +28,16 @@ class API()(using system: ActorSystem, executor: ExecutionContext, logger: Loggi
         logger.info("Something hitting /")
         complete(StatusCodes.OK)
       }
-    }
-    path("/api") {
-      get {
-        logger("Something hitting /api")
-        val message = Message(config.getString("api.message"))
-        complete(message)
+    } ~
+      pathPrefix("api") {
+        pathEnd {
+          get {
+            logger.info("Something hitting /api")
+            val message = Message(config.getString("api.message"))
+            complete(message)
+          }
+        }
       }
-    }
   }
 
 object TestAPI extends App :
