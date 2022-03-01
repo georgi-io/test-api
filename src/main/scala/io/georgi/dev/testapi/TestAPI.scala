@@ -25,14 +25,14 @@ class API()(using system: ActorSystem, executor: ExecutionContext, logger: Loggi
   val route: Route = {
     path("") {
       get {
-        logger.info("Something hitting /")
+        logger.info("Health Check")
         complete(StatusCodes.OK)
       }
     } ~
       pathPrefix("api") {
         pathEnd {
           get {
-            logger.info("Something hitting /api")
+            logger.info("Somebody is hitting the API")
             val message = Message(config.getString("api.message"))
             complete(message)
           }
