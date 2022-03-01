@@ -26,9 +26,6 @@ jobs:
         run: sbt -v +test
   deploy:
     runs-on: ubuntu-latest
-#    env:
-#      REPO_URL: 927485958639.dkr.ecr.eu-central-1.amazonaws.com
-#      REPO_IMAGE: test-api-178e95b
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -40,7 +37,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
-          role-to-assume: arn:aws:iam::927485958639:role/deploy-role-6642be1
+          role-to-assume: arn:aws:iam::927485958639:role/deploy-role-f8b3a6f
           role-session-name: deploy-role-session
           aws-region: eu-central-1
       - name: Login to Amazon ECR
