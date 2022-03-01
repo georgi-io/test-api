@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.{Http, ServerBuilder}
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Directives.logRequestResult
 import akka.http.scaladsl.server.Route
 import com.typesafe.config.{Config, ConfigFactory}
@@ -23,8 +23,15 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
 
 class API()(using system: ActorSystem, executor: ExecutionContext, logger: LoggingAdapter, config: Config) extends JsonSupport :
   val route: Route = {
+    path("") {
+      get {
+        logger.info("Something hitting /")
+        complete(StatusCodes.OK)
+      }
+    }
     path("/api") {
       get {
+        logger("Something hitting /api")
         val message = Message(config.getString("api.message"))
         complete(message)
       }
